@@ -6,20 +6,20 @@ import (
 	"kanban-app-be/handlers"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
 )
-
-func ping(c *gin.Context) {
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "pong"})
-}
 
 func main() {
 	fmt.Println("hello this is main speaking")
 	DB := db.Init()
-	handlers := handlers.New(DB)
-	fmt.Println(handlers)
-	router := gin.Default()
-	router.GET("/ping", ping)
+	h := handlers.New(DB)
+	fmt.Println(h)
 
-	router.Run("localhost:8080")
+	router := mux.NewRouter()
+
+	router.HandleFunc("/ping", h.Ping).Methods(http.MethodGet)
+
+	// router.GET("/allBoards")
+	http.ListenAndServe("localhost:8080", router)
+
 }
