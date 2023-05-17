@@ -20,9 +20,9 @@ func Init() *gorm.DB {
 	host := os.Getenv("DBHOST")
 	user := os.Getenv("DBUSER")
 	pass := os.Getenv("DBPASS")
-	dbName := os.Getenv("DBNAME")
+	name := os.Getenv("DBNAME")
 	port := os.Getenv("DBPORT")
-	dbURL := "host=" + host + " user=" + user + "password=" + pass + " dbname=" + dbName + "port=" + port + "sslmode=disable"
+	dbURL := "host=" + host + " user=" + user + " password=" + pass + " dbname=" + name + " port=" + port + " sslmode=disable"
 	fmt.Println("dbURL: ", dbURL)
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 
