@@ -18,6 +18,7 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/ping", h.Ping).Methods(http.MethodGet)
+	router.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
 
 	// router.GET("/allBoards")
 	http.ListenAndServe("localhost:8080", router)

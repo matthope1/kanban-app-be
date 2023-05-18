@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -17,5 +18,11 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	fmt.Println("body", body)
+	var result map[string]any
+	json.Unmarshal([]byte(body), &result)
+	fmt.Printf("%+v\n", result)
+
+	// var board types.Board
+	// json.Unmarshal(body, &board)
+	// fmt.Printf("%+v\n", board)
 }
