@@ -19,6 +19,7 @@ func main() {
 
 	router.HandleFunc("/ping", h.Ping).Methods(http.MethodGet)
 	router.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
+	router.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
 
 	// router.GET("/allBoards")
 	http.ListenAndServe("localhost:8080", router)

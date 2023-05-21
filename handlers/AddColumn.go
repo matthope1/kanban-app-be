@@ -18,9 +18,10 @@ func (h handler) AddColumn(w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO:
 	// 1. get board id from req
-	// 2. create new column obj & give it the board id
+	// 2. create new column obj & add board id from step 1
 	// 3. commit to db
 	// 4. send success response
+	// 5. handle errors and send appropriate response 
 
 	fmt.Println("body", body)
 }
