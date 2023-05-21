@@ -17,10 +17,10 @@ func (h handler) AddColumn(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 	// TODO:
-	// 1.
-	// 2.
-	// 3.
-	// 4.
+	// 1. get board id from req
+	// 2. create new column obj & give it the board id
+	// 3. commit to db
+	// 4. send success response
 
 	fmt.Println("body", body)
 }
