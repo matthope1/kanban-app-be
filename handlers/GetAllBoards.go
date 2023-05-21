@@ -23,6 +23,7 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%+v\n", result)
 	// TODO: 
 	// 1. get user id from req  (how can we use auth0 to ensure that the requests are coming from the correct user?)
+	// https://auth0.com/docs/quickstart/backend/golang/interactive check this link
 	// 2. get all boards from database for the current user
 	// 3. return boards in success response
 	// 4. handle errors and send appropriate response

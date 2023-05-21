@@ -16,6 +16,12 @@ func (h handler) AddBoard(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	// TODO: 
+	// 1. get user id & board info from req 
+	// 2. Create new board obj with info 
+	// 3. commit to db 
+	// 4. send success response 
+	// 5. err handling 
 
 	fmt.Println("body", body)
 }
