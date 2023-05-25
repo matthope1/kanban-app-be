@@ -25,6 +25,10 @@ func main() {
 	router.HandleFunc("/allTasks", h.AddColumn).Methods(http.MethodPost)
 
 	router.Use(middleware.LoggingMiddleware)
+	// ensure that the user is logged in and has valid jwt
+	// TODO: how can we apply this only to certain endpoints?
+	// maybe inside of the middleware we can check to see the route that was used, if its a protected route send it to the 
+	// according middleware, otherwise send it back to the normal handler
 	router.Use(middleware.EnsureValidToken)
 
 
