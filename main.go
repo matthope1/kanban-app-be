@@ -18,16 +18,17 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
-	router.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
-	router.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
-
+	router.HandleFunc("/ping", h.Ping).Methods(http.MethodGet)
 	router.Use(middleware.LoggingMiddleware)
 
 	// applying middleware to specific routes 
 	api := router.PathPrefix("").Subrouter()
 	api.Use(middleware.EnsureValidToken)
-	api.HandleFunc("/ping", h.Ping).Methods(http.MethodGet)
+
+	// only signed in users can call these functions
+	api.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
+	api.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
 
 	http.ListenAndServe("localhost:8080", router)
 }
