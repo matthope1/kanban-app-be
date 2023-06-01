@@ -30,5 +30,8 @@ func main() {
 	api.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
 	api.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
 
+	api.HandleFunc("/updateBoard", h.GetAllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/updateColumn", h.GetAllBoards).Methods(http.MethodGet)
+
 	http.ListenAndServe("localhost:8080", router)
 }
