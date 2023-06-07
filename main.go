@@ -14,6 +14,7 @@ func main() {
 	fmt.Println("hello this is main speaking")
 	DB := db.Init()
 	h := handlers.New(DB)
+	fmt.Println("handlers: ")
 	fmt.Println(h)
 
 	router := mux.NewRouter()
