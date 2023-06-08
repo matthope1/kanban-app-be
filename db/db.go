@@ -11,7 +11,6 @@ import (
 )
 
 func Init() *gorm.DB {
-	fmt.Println("db init called....")
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(".env file could not be loaded")
@@ -22,6 +21,7 @@ func Init() *gorm.DB {
 	pass := os.Getenv("DBPASS")
 	name := os.Getenv("DBNAME")
 	port := os.Getenv("DBPORT")
+	// TODO: check if we have all db creds
 	dbURL := "host=" + host + " user=" + user + " password=" + pass + " dbname=" + name + " port=" + port + " sslmode=disable"
 	fmt.Println("dbURL: ", dbURL)
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
