@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"kanban-app-be/db"
 	"kanban-app-be/handlers"
 	"kanban-app-be/middleware"
@@ -32,7 +31,6 @@ func main() {
 	api.HandleFunc("/updateColumn", h.GetAllBoards).Methods(http.MethodGet)
 
 	api.HandleFunc("/updateUser", h.GetAllBoards).Methods(http.MethodGet)
-
 
 	http.ListenAndServe("localhost:8080", router)
 }

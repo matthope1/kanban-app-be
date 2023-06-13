@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	// "kanban-app-be/auth0"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -9,7 +10,8 @@ import (
 )
 
 func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("get all boards called")
+	fmt.Println("get all boards called... look for access token in the headers...")
+
 	// Read to request body
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
@@ -21,6 +23,11 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	var result map[string]any
 	json.Unmarshal([]byte(body), &result)
 	fmt.Printf("%+v\n", result)
+
+	// get access token from request
+
+	// get user data from auth0 
+
 	// TODO: 
 	// 1. get user id from req  (how can we use auth0 to ensure that the requests are coming from the correct user?)
 	// https://auth0.com/docs/quickstart/backend/golang/interactive check this link
