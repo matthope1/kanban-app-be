@@ -12,6 +12,14 @@ import (
 func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("get all boards called... look for access token in the headers...")
 
+	// allow all origins for now 
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+
 	// Read to request body
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
@@ -23,6 +31,7 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	var result map[string]any
 	json.Unmarshal([]byte(body), &result)
 	fmt.Printf("%+v\n", result)
+
 
 	// get access token from request
 
@@ -38,4 +47,7 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	// var board types.Board
 	// json.Unmarshal(body, &board)
 	// fmt.Printf("%+v\n", board)
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode("response from  get all boards")
 }

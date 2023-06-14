@@ -24,7 +24,7 @@ func GetUserInfo(accessToken string) {
 	body, _ := ioutil.ReadAll(res.Body)
 
 	fmt.Println("Response from getting auth0 user data: ")
-	fmt.Println("I expect to see some fucking emails...")
+	fmt.Println("I expect to see some emails...")
 	fmt.Println(res)
 	fmt.Println(string(body))
 }
