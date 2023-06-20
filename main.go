@@ -20,7 +20,7 @@ func main() {
 	// router.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
 	router.Use(middleware.LoggingMiddleware)
 
-	// applying middleware to specific routes 
+	// applying middleware to specific routes
 	api := router.PathPrefix("").Subrouter()
 	api.Use(middleware.EnsureValidToken)
 
@@ -35,8 +35,11 @@ func main() {
 	api.HandleFunc("/updateUser", h.GetAllBoards).Methods(http.MethodGet)
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
+		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
+		AllowedHeaders:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "HEAD"},
+		// Debug: true,
 	})
 
 	handler := c.Handler(router)
