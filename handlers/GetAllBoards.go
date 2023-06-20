@@ -16,12 +16,11 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
-
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode("response from all boards yall...")
+	json.NewEncoder(w).Encode("response from all boards y'all...")
 
 
 	// // Read to request body

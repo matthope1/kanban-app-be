@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/ping", h.Ping).Methods(http.MethodGet)
+	// router.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
 	router.Use(middleware.LoggingMiddleware)
 
 	// applying middleware to specific routes 
@@ -32,5 +34,12 @@ func main() {
 
 	api.HandleFunc("/updateUser", h.GetAllBoards).Methods(http.MethodGet)
 
-	http.ListenAndServe("localhost:8080", router)
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowCredentials: true,
+	})
+
+	handler := c.Handler(router)
+
+	http.ListenAndServe("localhost:8080", handler)
 }
