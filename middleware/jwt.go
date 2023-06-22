@@ -2,15 +2,15 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"time"
-	"fmt"
 	"strings"
+	"time"
 
-	"github.com/auth0/go-jwt-middleware/v2"
+	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/jwks"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 )
@@ -31,7 +31,9 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 // func EnsureValidToken() func(next http.Handler) http.Handler {
 func EnsureValidToken(next http.Handler) http.Handler {
 	fmt.Println("ensure valid token called")
+	fmt.Println("auth0 audience", os.Getenv("AUTH0_AUDIENCE"))
 	issuerURL, err := url.Parse("https://" + os.Getenv("AUTH0_DOMAIN") + "/")
+	fmt.Println("issuerURL", issuerURL)
 	if err != nil {
 		log.Fatalf("Failed to parse the issuer url: %v", err)
 	}
@@ -85,12 +87,11 @@ func (c CustomClaims) HasScope(expectedScope string) bool {
 	return false
 }
 
-
 func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Do stuff here
-		log.Println("logging middleware..... ")
-		log.Println(r.RequestURI)
+		// log.Println(r.RequestURI)
+
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(w, r)
 	})
