@@ -9,6 +9,16 @@ type User struct {
 	Created_at time.Time `json:"created_at"`
 }
 
+type UserInfo struct {
+	Sub           string `json:"sub"`
+	Nickname      string `json:"nickname"`
+	Name          string `json:"name"`
+	Picture       string `json:"picture"`
+	UpdatedAt     string `json:"updated_at"`
+	Email         string `json:"email"`
+	EmailVerified string `json:"email_verified"`
+}
+
 type Board struct {
 	ID         int       `json:"id"`
 	Title      string    `json:"title"`

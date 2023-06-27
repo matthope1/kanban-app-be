@@ -1,18 +1,25 @@
 package handlers
 
 import (
-	// "kanban-app-be/auth0"
 	"encoding/json"
 	"fmt"
+	"kanban-app-be/auth0"
+
 	// "io/ioutil"
 	// "log"
 	"net/http"
+
+	middleware "github.com/auth0/go-jwt-middleware/v2"
 )
 
 func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("get all boards called... look for access token in the headers...")
+	token, _ := middleware.AuthHeaderTokenExtractor(r)
+	fmt.Println("token from get all boards request..", token)
+	// TODO: import local auth0 package and get user info from auth0
+	userInfo := auth0.GetUserInfo(token)
+	fmt.Println("user info email", userInfo.Email)
 
-	// allow all origins for now 
+	// allow all origins for now
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -21,7 +28,6 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode("response from all boards y'all...")
-
 
 	// // Read to request body
 	// defer r.Body.Close()
@@ -35,12 +41,11 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	// json.Unmarshal([]byte(body), &result)
 	// fmt.Printf("%+v\n", result)
 
-
 	// // get access token from request
 
-	// // get user data from auth0 
+	// // get user data from auth0
 
-	// // TODO: 
+	// // TODO:
 	// // 1. get user id from req  (how can we use auth0 to ensure that the requests are coming from the correct user?)
 	// // https://auth0.com/docs/quickstart/backend/golang/interactive check this link
 	// // 2. get all boards from database for the current user
