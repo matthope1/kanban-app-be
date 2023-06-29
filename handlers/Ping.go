@@ -7,6 +7,7 @@ import (
 )
 
 func (h handler) Ping(w http.ResponseWriter, r *http.Request) {
+
 	fmt.Println("PONG")
 	// Send a 201 created response
 	w.Header().Add("Content-Type", "application/json")

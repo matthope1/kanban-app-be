@@ -1,8 +1,9 @@
 CREATE TABLE "users" (
   "id" integer PRIMARY KEY,
+  "email" varchar UNIQUE NOT NULL,
   "username" varchar,
   "role" varchar,
-  "created_at" timestamps
+  "created_at" timestamp
 );
 
 CREATE TABLE "boards" (

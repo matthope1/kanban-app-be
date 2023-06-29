@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"kanban-app-be/auth0"
+	"kanban-app-be/types"
 
 	// "io/ioutil"
 	// "log"
@@ -17,7 +18,6 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("token from get all boards request..", token)
 	// TODO: import local auth0 package and get user info from auth0
 	userInfo := auth0.GetUserInfo(token)
-	fmt.Println("user info email", userInfo.Email)
 
 	// allow all origins for now
 	w.Header().Add("Content-Type", "application/json")
@@ -26,8 +26,8 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode("response from all boards y'all...")
+	// w.WriteHeader(http.StatusCreated)
+	// json.NewEncoder(w).Encode("response from all boards y'all...")
 
 	// // Read to request body
 	// defer r.Body.Close()
@@ -41,14 +41,32 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	// json.Unmarshal([]byte(body), &result)
 	// fmt.Printf("%+v\n", result)
 
-	// // get access token from request
-
 	// // get user data from auth0
 
 	// // TODO:
-	// // 1. get user id from req  (how can we use auth0 to ensure that the requests are coming from the correct user?)
-	// // https://auth0.com/docs/quickstart/backend/golang/interactive check this link
+	// // 1. get user email from req  (how can we use auth0 to ensure that the requests are coming from the correct user?)
+	fmt.Println("user info email", userInfo.Email)
+
+	fmt.Println("db obj", h.DB)
 	// // 2. get all boards from database for the current user
+
+	// I don't think we need to do automigrate
+
+	// h.DB.AutoMigrate(&types.Board{})
+
+	// test creating a board
+
+	// h.DB.Create(&types.Board{ID: 0, Email: "matt-hope@hotmail.com", Title: "Test Board", User_id: 0, Status: "Todo", Created_at: time.Now()})
+
+	// test read
+	var board types.Boards
+
+	// find the first board with email = matt-hope@hotmail.com
+
+	h.DB.First(board, "id = ?", 0)
+
+	fmt.Println(board.Title)
+
 	// // 3. return boards in success response
 	// // 4. handle errors and send appropriate response
 
@@ -56,6 +74,6 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	// // json.Unmarshal(body, &board)
 	// // fmt.Printf("%+v\n", board)
 
-	// w.WriteHeader(http.StatusCreated)
-	// json.NewEncoder(w).Encode("response from  get all boards")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode("response from  get all boards")
 }

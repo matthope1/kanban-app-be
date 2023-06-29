@@ -19,8 +19,9 @@ type UserInfo struct {
 	EmailVerified string `json:"email_verified"`
 }
 
-type Board struct {
+type Boards struct {
 	ID         int       `json:"id"`
+	Email      string    `json:"email"`
 	Title      string    `json:"title"`
 	User_id    int       `json:"user_id"`
 	Status     string    `json:"status"`
