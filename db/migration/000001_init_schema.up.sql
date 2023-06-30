@@ -1,20 +1,12 @@
-CREATE TABLE "users" (
-  "id" integer PRIMARY KEY,
-  "email" varchar UNIQUE NOT NULL,
-  "username" varchar,
-  "role" varchar,
-  "created_at" timestamp
-);
-
-CREATE TABLE "boards" (
+CREATE TABLE "board" (
   "id" integer PRIMARY KEY,
   "title" varchar,
-  "user_id" integer,
+  "user_email" varchar UNIQUE NOT NULL,
   "status" varchar,
   "created_at" timestamp
 );
 
-CREATE TABLE "columns" (
+CREATE TABLE "column" (
   "id" integer PRIMARY KEY,
   "title" varchar,
   "board_id" integer,
@@ -29,16 +21,20 @@ CREATE TABLE "task" (
   "created_at" timestamp
 );
 
-CREATE TABLE "subtasks" (
+CREATE TABLE "subtask" (
   "id" integer PRIMARY KEY,
   "task_id" integer,
   "created_at" timestamp
 );
 
-ALTER TABLE "boards" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
-ALTER TABLE "columns" ADD FOREIGN KEY ("board_id") REFERENCES "boards" ("id");
 
-ALTER TABLE "task" ADD FOREIGN KEY ("column_id") REFERENCES "columns" ("id");
+CREATE INDEX ON "board" ("user_email");
 
-ALTER TABLE "subtasks" ADD FOREIGN KEY ("task_id") REFERENCES "task" ("id");
+CREATE INDEX ON "column" ("board_id");
+
+ALTER TABLE "column" ADD FOREIGN KEY ("board_id") REFERENCES "board" ("id");
+
+ALTER TABLE "task" ADD FOREIGN KEY ("column_id") REFERENCES "column" ("id");
+
+ALTER TABLE "subtask" ADD FOREIGN KEY ("task_id") REFERENCES "task" ("id");

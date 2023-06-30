@@ -1,50 +1,56 @@
 package types
 
-import "time"
+import (
+	"time"
 
-type User struct {
-	ID         int       `json:"id"`
-	Username   string    `json:"username"`
-	Role       string    `json:"role"`
-	Created_at time.Time `json:"created_at"`
-}
+	"gorm.io/gorm"
+)
 
 type UserInfo struct {
-	Sub           string `json:"sub"`
-	Nickname      string `json:"nickname"`
-	Name          string `json:"name"`
-	Picture       string `json:"picture"`
-	UpdatedAt     string `json:"updated_at"`
-	Email         string `json:"email"`
-	EmailVerified string `json:"email_verified"`
+	Sub           string
+	Nickname      string
+	Name          string
+	Picture       string
+	UpdatedAt     string
+	Email         string
+	EmailVerified string
 }
 
-type Boards struct {
-	ID         int       `json:"id"`
-	Email      string    `json:"email"`
-	Title      string    `json:"title"`
-	User_id    int       `json:"user_id"`
-	Status     string    `json:"status"`
-	Created_at time.Time `json:"created_at"`
+type Board struct {
+	gorm.Model
+	ID        int
+	UserEmail string
+	Title     string
+	Status    string
+	// CreatedAt time.Time
 }
 
 type Column struct {
-	ID         int       `json:"id"`
-	Title      string    `json:"title"`
-	Board_id   int       `json:"board_id"`
-	Created_at time.Time `json:"created_at"`
+	gorm.Model
+	ID        int
+	Title     string
+	BoardId   int
+	CreatedAt time.Time
 }
 
 type Task struct {
-	ID         int       `json:"id"`
-	Status     string    `json:"status"`
-	Desc       string    `json:"desc"`
-	Column_id  int       `json:"board_id"`
-	Created_at time.Time `json:"created_at"`
+	gorm.Model
+	ID        int
+	Status    string
+	Desc      string
+	ColumnId  int
+	CreatedAt time.Time
 }
 
 type Subtask struct {
-	ID         int       `json:"id"`
-	Task_id    int       `json:"task_id"`
-	Created_at time.Time `json:"created_at"`
+	gorm.Model
+	ID        int
+	TaskId    int
+	CreatedAt time.Time
+}
+
+type Product struct {
+	gorm.Model
+	Code  string
+	Price uint
 }

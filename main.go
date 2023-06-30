@@ -16,7 +16,7 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/ping", h.Ping).Methods(http.MethodGet)
+	router.HandleFunc("/ping", handlers.Ping).Methods(http.MethodGet)
 	// router.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
 	router.Use(middleware.LoggingMiddleware)
 
