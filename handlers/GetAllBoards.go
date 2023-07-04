@@ -1,16 +1,16 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"kanban-app-be/auth0"
 	"kanban-app-be/types"
-
-	// "io/ioutil"
-	// "log"
 	"net/http"
+	"os"
 
 	middleware "github.com/auth0/go-jwt-middleware/v2"
+	"github.com/jackc/pgx/v5"
 )
 
 func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
@@ -33,46 +33,46 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("user info email", userInfo.Email)
 
 	// // 2. get all boards from database for the current user
-	// testing boards struct
+	// testing pgx database connection
 
-	// var board types.Board
+	// urlExample := "postgres://username:password@localhost:5432/database_name"
+	// TODO: lets build a nice db url
 
-	// h.DB.Unscoped().First(&board, 0)
+	dbUrl := os.Getenv("DATABASE_URL")
+	fmt.Println("connecting to this db url", dbUrl)
 
-	// h.DB.Raw("SELECT * FROM board where id = ?", 0).Scan(&board) // find board with integer primary key
-	// fmt.Println("board user email", board.UserEmail)
+	conn, err := pgx.Connect(context.Background(), dbUrl)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+	}
+	defer conn.Close(context.Background())
 
-	// Migrate the schema
-	// h.DB.AutoMigrate(&types.Board{})
-	// h.DB.AutoMigrate(&types.Column{})
-	// h.DB.AutoMigrate(&types.Task{})
-	// h.DB.AutoMigrate(&types.Subtask{})
+	var user_email string
+	err = conn.QueryRow(context.Background(), "select user_email from board where id=$1", 1).Scan(&user_email)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+	}
 
-	// var tables []string
-	// if err := h.DB.Table("information_schema.tables").Where("table_schema = ?", "public").Pluck("table_name", &tables).Error; err != nil {
-	// 	panic(err)
-	// }
-
-	// for i := 0; i < len(tables); i++ {
-	// 	fmt.Println("tables: ", tables[i])
-	// }
-
-	// // basic example product from gorm docs
-	// // Migrate the schema
-	h.DB.AutoMigrate(&types.Product{})
-
-	// // Create
-	// h.DB.Create(&types.Product{Code: "D42", Price: 100})
-
-	// Read
-	var product types.Product
-	h.DB.First(&product, 0) // find product with integer primary key
-	// h.DB.First(&product, "code = ?", "") // find product with code D42
-	fmt.Println("product code: ", product.Code)
-	// end testing
+	fmt.Println("user email from database", user_email)
 
 	// // 3. return boards in success response
 	// // 4. handle errors and send appropriate response
+
+	// testing gorm again
+	// var result string
+	// h.DB.Raw("SELECT user_email FROM board WHERE id = ?", 1).Scan(&result)
+	// fmt.Println("my board:", result)
+
+	// TODO: add error handling, ensure that user email exists
+	var myBoard types.Board
+	h.DB.Raw("SELECT * from board WHERE user_email= ?", userInfo.Email).Scan(&myBoard)
+	fmt.Println("my board id:", myBoard.ID)
+	fmt.Println("my board title:", myBoard.Title)
+	fmt.Println("my board email:", myBoard.UserEmail)
+	fmt.Println("my board status:", myBoard.Status)
+
+	// TODO: get all boards where user email is userInfo.Email
+	// TODO: get all other related information, columns, tasks, subtasks...
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode("response from  get all boards")
