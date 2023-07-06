@@ -1,21 +1,21 @@
 package handlers
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"kanban-app-be/auth0"
-	"kanban-app-be/types"
+	"kanban-app-be/db"
+
+	// "kanban-app-be/types"
 	"net/http"
-	"os"
 
 	middleware "github.com/auth0/go-jwt-middleware/v2"
-	"github.com/jackc/pgx/v5"
 )
 
 func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
+	// get all boards is maybe not what we wanna call it.
+	// We can call it get user data, and this function will return all boards columns etc...
 	token, _ := middleware.AuthHeaderTokenExtractor(r)
-	fmt.Println("token from get all boards request..", token)
 	// TODO: import local auth0 package and get user info from auth0
 	userInfo := auth0.GetUserInfo(token)
 
@@ -35,26 +35,6 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	// // 2. get all boards from database for the current user
 	// testing pgx database connection
 
-	// urlExample := "postgres://username:password@localhost:5432/database_name"
-	// TODO: lets build a nice db url
-
-	dbUrl := os.Getenv("DATABASE_URL")
-	fmt.Println("connecting to this db url", dbUrl)
-
-	conn, err := pgx.Connect(context.Background(), dbUrl)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-	}
-	defer conn.Close(context.Background())
-
-	var user_email string
-	err = conn.QueryRow(context.Background(), "select user_email from board where id=$1", 1).Scan(&user_email)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-	}
-
-	fmt.Println("user email from database", user_email)
-
 	// // 3. return boards in success response
 	// // 4. handle errors and send appropriate response
 
@@ -64,15 +44,40 @@ func (h handler) GetAllBoards(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("my board:", result)
 
 	// TODO: add error handling, ensure that user email exists
-	var myBoard types.Board
-	h.DB.Raw("SELECT * from board WHERE user_email= ?", userInfo.Email).Scan(&myBoard)
-	fmt.Println("my board id:", myBoard.ID)
-	fmt.Println("my board title:", myBoard.Title)
-	fmt.Println("my board email:", myBoard.UserEmail)
-	fmt.Println("my board status:", myBoard.Status)
+
+	// TODO: turn this database call into its own standalone function
+
+	// var boards []types.Board
+
+	// h.DB.Raw("SELECT * from board WHERE user_email= ?", userInfo.Email).Scan(&boards)
+
+	// print data for all boards
+
+	// for i, board := range boards {
+	// 	fmt.Println("board #: ", i)
+	// 	fmt.Println("my board id:", board.ID)
+	// 	fmt.Println("my board title:", board.Title)
+	// 	fmt.Println("my board email:", board.UserEmail)
+	// 	fmt.Println("my board status:", board.Status)
+	// }
+
+	newBoards := db.GetBoardsByEmail(h.DB, userInfo.Email)
+
+	// print data for all boards
+	fmt.Println("testing getboardsbyemail function...")
+	for i, board := range newBoards {
+		fmt.Println("board #: ", i)
+		fmt.Println("my board id:", board.ID)
+		fmt.Println("my board title:", board.Title)
+		fmt.Println("my board email:", board.UserEmail)
+		fmt.Println("my board status:", board.Status)
+	}
 
 	// TODO: get all boards where user email is userInfo.Email
-	// TODO: get all other related information, columns, tasks, subtasks...
+	// You can have functions for each of these db operations rather than putting all of the queries in this function
+	// TODO: function for getting all user boards,
+	// TODO: function for getting all columns for a board id
+	// TODO: function for getting all
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode("response from  get all boards")

@@ -1,7 +1,7 @@
 CREATE TABLE "board" (
   "id" integer PRIMARY KEY,
   "title" varchar,
-  "user_email" varchar UNIQUE NOT NULL,
+  "user_email" varchar NOT NULL,
   "status" varchar,
   "created_at" timestamp
 );

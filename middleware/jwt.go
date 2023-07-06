@@ -30,8 +30,6 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 
 // func EnsureValidToken() func(next http.Handler) http.Handler {
 func EnsureValidToken(next http.Handler) http.Handler {
-	fmt.Println("ensure valid token called")
-	fmt.Println("auth0 audience", os.Getenv("AUTH0_AUDIENCE"))
 	issuerURL, err := url.Parse("https://" + os.Getenv("AUTH0_DOMAIN") + "/")
 	fmt.Println("issuerURL", issuerURL)
 	if err != nil {
