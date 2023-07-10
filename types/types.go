@@ -22,7 +22,8 @@ type Board struct {
 	UserEmail string
 	Title     string
 	Status    string
-	// CreatedAt time.Time
+	CreatedAt time.Time
+	Columns   []Column
 }
 
 type Column struct {
@@ -31,6 +32,7 @@ type Column struct {
 	Title     string
 	BoardId   int
 	CreatedAt time.Time
+	Tasks     []Task
 }
 
 type Task struct {
@@ -40,6 +42,7 @@ type Task struct {
 	Desc      string
 	ColumnId  int
 	CreatedAt time.Time
+	Subtasks  []Subtask
 }
 
 type Subtask struct {

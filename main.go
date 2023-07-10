@@ -25,14 +25,14 @@ func main() {
 	api.Use(middleware.EnsureValidToken)
 
 	// only signed in users can call these functions
-	api.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/allBoards", h.AllBoards).Methods(http.MethodGet)
 	api.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
 	api.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
 
-	api.HandleFunc("/updateBoard", h.GetAllBoards).Methods(http.MethodGet)
-	api.HandleFunc("/updateColumn", h.GetAllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/updateBoard", h.AllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/updateColumn", h.AllBoards).Methods(http.MethodGet)
 
-	api.HandleFunc("/updateUser", h.GetAllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/updateUser", h.AllBoards).Methods(http.MethodGet)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
