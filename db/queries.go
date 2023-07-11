@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"kanban-app-be/types"
 
 	"gorm.io/gorm"
@@ -32,5 +33,8 @@ func GetSubTasks(db *gorm.DB, taskId int) []types.Subtask {
 
 // TODO: update functions
 func UpdateBoard(db *gorm.DB, board types.Board) {
-	db.Save(&board)
+	// On the front end, if the user wants to update the column names, we need to update the column names in the column table
+	if err := db.Exec("UPDATE board set title = ?, status = ? WHERE id = ?", board.Title, board.Status, board.ID).Error; err != nil {
+		fmt.Println("error updating board:", err)
+	}
 }

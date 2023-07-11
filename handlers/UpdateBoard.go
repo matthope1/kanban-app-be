@@ -6,9 +6,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/http/httputil"
 
 	"kanban-app-be/auth0"
+	"kanban-app-be/db"
+	"kanban-app-be/types"
 
 	middleware "github.com/auth0/go-jwt-middleware/v2"
 )
@@ -17,16 +18,6 @@ func (h handler) UpdateBoard(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("update board called")
 	token, _ := middleware.AuthHeaderTokenExtractor(r)
 	userInfo := auth0.GetUserInfo(token)
-	fmt.Println("user email:", userInfo.Email)
-
-	requestDump, err := httputil.DumpRequest(r, true)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("domp", string(requestDump))
-
-	// TODO: look for the board id
-	// only allow the update to go through if the user owns the board
 
 	// allow all origins
 	w.Header().Add("Content-Type", "application/json")
@@ -35,23 +26,34 @@ func (h handler) UpdateBoard(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
-	fmt.Println("update board called")
 	// Read to request body
 	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
-
 	if err != nil {
 		log.Fatalln(err)
 	}
-	// TODO:
-	// 1. get board id & updated fields from req
-	// 2. retreive board obj from db using id
-	// 3. update fields & commit to db
-	// 4. send response back based on success of previous steps
 
-	fmt.Println("body", string(body))
-	w.WriteHeader(http.StatusCreated)
-	// respond with the board id
-	// w.Write([]byte("this is the update board response"))
-	json.NewEncoder(w).Encode("this is the update board response")
+	// fmt.Println("body", string(body))
+
+	var board types.Board
+	err = json.Unmarshal(body, &board)
+	if err != nil {
+		fmt.Println("error unmarshalling board for user: ", userInfo.Email)
+		log.Fatalln(err)
+		return
+	}
+
+	fmt.Println("attempting to update board...")
+	if userInfo.Email != board.UserEmail {
+		fmt.Println("user email does not match board user email")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode("user email does not match board user email")
+		return
+	}
+
+	db.UpdateBoard(h.DB, board)
+	fmt.Println("after board update...")
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Successfully updated board")
 }

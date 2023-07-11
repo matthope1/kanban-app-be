@@ -19,9 +19,9 @@ type UserInfo struct {
 type Board struct {
 	gorm.Model
 	ID        int
-	UserEmail string
+	UserEmail string `json:"user_email"`
 	Title     string
-	Status    string
+	Status    string `json:"status"`
 	CreatedAt time.Time
 	Columns   []Column
 }
