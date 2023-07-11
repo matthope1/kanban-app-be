@@ -17,7 +17,7 @@ func (h handler) AllBoards(w http.ResponseWriter, r *http.Request) {
 	token, _ := middleware.AuthHeaderTokenExtractor(r)
 	userInfo := auth0.GetUserInfo(token)
 
-	// allow all origins for now
+	// allow all origins
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -54,6 +54,8 @@ func (h handler) AllBoards(w http.ResponseWriter, r *http.Request) {
 				for _, subtask := range subtasks {
 					board.Columns[j].Tasks[k].Subtasks = append(board.Columns[j].Tasks[k].Subtasks, subtask)
 				}
+				// TODO: test adding the subtasks this way
+				// board.Columns[j].Tasks[k].Subtasks = append(board.Columns[j].Tasks[k].Subtasks, subtasks...)
 			}
 		}
 	}
