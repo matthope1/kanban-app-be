@@ -30,7 +30,7 @@ func GetSubTasks(db *gorm.DB, taskId int) []types.Subtask {
 	return subtasks
 }
 
-// TODO: update board function
+// TODO: update functions
 func UpdateBoard(db *gorm.DB, board types.Board) {
 	db.Save(&board)
 }
