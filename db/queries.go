@@ -38,3 +38,16 @@ func UpdateBoard(db *gorm.DB, board types.Board) {
 		fmt.Println("error updating board:", err)
 	}
 }
+
+// TODO: add functions
+func AddBoard(db *gorm.DB, board types.Board, userEmail string) {
+	// INSERT INTO table_name (column1, column2, column3, ...)
+	// VALUES (value1, value2, value3, ...);
+	// sql to insert board into board table
+	fmt.Println("adding board to db:", board.Title, board.Status, userEmail)
+
+	if err := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?)",
+		board.Title, board.Status, board.UserEmail).Error; err != nil {
+		fmt.Println("error adding board to db:", err)
+	}
+}
