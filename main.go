@@ -30,7 +30,7 @@ func main() {
 	api.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
 
 	api.HandleFunc("/updateBoard", h.UpdateBoard).Methods(http.MethodPost)
-	api.HandleFunc("/updateColumn", h.AllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/updateColumn", h.UpdateColumn).Methods(http.MethodPost)
 
 	api.HandleFunc("/updateUser", h.AllBoards).Methods(http.MethodGet)
 

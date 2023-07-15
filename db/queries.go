@@ -55,7 +55,7 @@ func AddBoard(db *gorm.DB, board types.Board, userEmail string) {
 func AddColumn(db *gorm.DB, column types.Column) {
 	fmt.Println("adding column to db:", column.Title, column.BoardId)
 
-	if err := db.Exec("INSERT INTO column (title, board_id) VALUES (?, ?)",
+	if err := db.Exec(`INSERT INTO "column" (title, board_id) VALUES (?, ?)`,
 		column.Title, column.BoardId).Error; err != nil {
 		fmt.Println("error adding column to db:", err)
 	}
@@ -64,7 +64,7 @@ func AddColumn(db *gorm.DB, column types.Column) {
 func UpdateColumn(db *gorm.DB, column types.Column) {
 	fmt.Println("updating column in db:", column.Title)
 
-	if err := db.Exec("UPDATE column set title = ? WHERE id = ?",
+	if err := db.Exec(`UPDATE "column" set title = ? WHERE id = ?`,
 		column.Title, column.ID).Error; err != nil {
 		fmt.Println("error updating column in db:", err)
 	}

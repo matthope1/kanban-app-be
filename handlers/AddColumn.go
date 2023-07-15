@@ -15,7 +15,7 @@ import (
 )
 
 func (h handler) AddColumn(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("update column called")
+	fmt.Println("add column called")
 
 	token, _ := middleware.AuthHeaderTokenExtractor(r)
 	userInfo := auth0.GetUserInfo(token)
@@ -39,6 +39,10 @@ func (h handler) AddColumn(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: ensure that the board is owned by the user
 	boardOwner := db.GetBoardOwnerById(h.DB, column.BoardId)
+	fmt.Println("board owner", boardOwner)
+	fmt.Println("user email from req", userInfo.Email)
+	// print all column data
+	fmt.Println("column", column)
 	if boardOwner != userInfo.Email {
 		fmt.Println("user does not own board")
 		json.NewEncoder(w).Encode("User does not own this board")

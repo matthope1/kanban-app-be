@@ -29,8 +29,8 @@ type Board struct {
 type Column struct {
 	gorm.Model
 	ID        int
-	Title     string
-	BoardId   int `json:"board_id"`
+	Title     string `json:"title"`
+	BoardId   int    `json:"board_id"`
 	CreatedAt time.Time
 	Tasks     []Task
 }
