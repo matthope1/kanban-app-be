@@ -36,26 +36,18 @@ func (h handler) AllBoards(w http.ResponseWriter, r *http.Request) {
 		for j, column := range columns {
 			boards[i].Columns = append(boards[i].Columns, column)
 
-			fmt.Println("my column id:", column.ID)
-			fmt.Println("my column title:", column.Title)
-			fmt.Println("my column board id:", column.BoardId)
-			fmt.Println("my column tasks :", column.Tasks)
-
 			// for each column, get all tasks and append to column struct
 			tasks := db.GetTasks(h.DB, column.ID)
 
 			for k, task := range tasks {
 				// append task to column struct
-				board.Columns[j].Tasks = append(board.Columns[j].Tasks, task)
+				boards[i].Columns[j].Tasks = append(boards[i].Columns[j].Tasks, task)
 
 				// for each task, get all subtasks and append to task struct
 				subtasks := db.GetSubTasks(h.DB, task.ID)
 
-				for _, subtask := range subtasks {
-					board.Columns[j].Tasks[k].Subtasks = append(board.Columns[j].Tasks[k].Subtasks, subtask)
-				}
-				// TODO: test adding the subtasks this way
-				// board.Columns[j].Tasks[k].Subtasks = append(board.Columns[j].Tasks[k].Subtasks, subtasks...)
+				// add subtasks to task struct
+				boards[i].Columns[j].Tasks[k].Subtasks = append(boards[i].Columns[j].Tasks[k].Subtasks, subtasks...)
 			}
 		}
 	}
