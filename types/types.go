@@ -39,8 +39,10 @@ type Task struct {
 	gorm.Model
 	ID        int
 	Status    string
+	Title     string `json:"title"`
 	Desc      string
 	ColumnId  int `json:"column_id"`
+	BoardId   int `json:"board_id"`
 	CreatedAt time.Time
 	Subtasks  []Subtask
 }
@@ -49,6 +51,7 @@ type Subtask struct {
 	gorm.Model
 	ID         int
 	TaskId     int `json:"task_id"`
+	BoardId    int `json:"board_id"`
 	Desc       string
 	IsComplete bool `json:"is_complete"`
 	CreatedAt  time.Time

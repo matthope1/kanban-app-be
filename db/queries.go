@@ -71,10 +71,10 @@ func UpdateColumn(db *gorm.DB, column types.Column) {
 }
 
 func AddTask(db *gorm.DB, task types.Task) {
-	fmt.Println("adding task to db:", task.Desc, task.ColumnId, task.Desc, task.Status)
+	fmt.Println("adding task to db:", task.Desc, task.ColumnId, task.Desc, task.Status, task.Title)
 
-	if err := db.Exec("INSERT INTO task (status, desc, column_id) VALUES (?, ?, ?)",
-		task.Status, task.Desc, task.ColumnId).Error; err != nil {
+	if err := db.Exec(`INSERT INTO task (status, "desc", column_id, title) VALUES (?, ?, ?, ?)`,
+		task.Status, task.Desc, task.ColumnId, task.Title).Error; err != nil {
 		fmt.Println("error adding task to db:", err)
 	}
 }
@@ -82,17 +82,16 @@ func AddTask(db *gorm.DB, task types.Task) {
 func UpdateTask(db *gorm.DB, task types.Task) {
 	fmt.Println("updating task in db:", task.Desc, task.Status)
 
-	if err := db.Exec("UPDATE task set desc = ?, status = ? WHERE id = ?",
-		task.Desc, task.Status, task.ID).Error; err != nil {
+	if err := db.Exec(`UPDATE task set "desc" = ?, status = ?, title = ? WHERE id = ?`,
+		task.Desc, task.Status, task.Title, task.ID).Error; err != nil {
 		fmt.Println("error updating task")
 	}
 }
 
-// TODO: add functions for subtasks
 func AddSubtask(db *gorm.DB, subtask types.Subtask) {
 	fmt.Println("adding subtask to db:", subtask.TaskId, subtask.Desc, subtask.IsComplete)
 
-	if err := db.Exec("INSERT INTO subtask (task_id, desc, is_complete) VALUES (?, ?, ?)",
+	if err := db.Exec(`INSERT INTO subtask (task_id, "desc", is_complete) VALUES (?, ?, ?)`,
 		subtask.TaskId).Error; err != nil {
 		fmt.Println("error adding subtask to db:", err)
 	}
@@ -101,7 +100,7 @@ func AddSubtask(db *gorm.DB, subtask types.Subtask) {
 func UpdateSubtask(db *gorm.DB, subtask types.Subtask) {
 	fmt.Println("updating subtask in db:", subtask.TaskId)
 
-	if err := db.Exec("UPDATE subtask set desc = ?, is_complete = ? WHERE id = ?",
+	if err := db.Exec(`UPDATE subtask set "desc" = ?, is_complete = ? WHERE id = ?`,
 		subtask.Desc, subtask.IsComplete, subtask.ID).Error; err != nil {
 		fmt.Println("error updating subtask")
 	}

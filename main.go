@@ -17,22 +17,25 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/ping", handlers.Ping).Methods(http.MethodGet)
-	// router.HandleFunc("/allBoards", h.GetAllBoards).Methods(http.MethodGet)
 	router.Use(middleware.LoggingMiddleware)
 
-	// applying middleware to specific routes
+	// applying middleware to CRUD routes
 	api := router.PathPrefix("").Subrouter()
 	api.Use(middleware.EnsureValidToken)
 
 	// only signed in users can call these functions
 	api.HandleFunc("/allBoards", h.AllBoards).Methods(http.MethodGet)
 	api.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
-	api.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
-
 	api.HandleFunc("/updateBoard", h.UpdateBoard).Methods(http.MethodPost)
+
+	api.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
 	api.HandleFunc("/updateColumn", h.UpdateColumn).Methods(http.MethodPost)
 
-	api.HandleFunc("/updateUser", h.AllBoards).Methods(http.MethodGet)
+	api.HandleFunc("/addTask", h.AddTask).Methods(http.MethodPost)
+	api.HandleFunc("/updateTask", h.UpdateTask).Methods(http.MethodPost)
+
+	api.HandleFunc("addSubTask", h.AddSubtask).Methods(http.MethodPost)
+	api.HandleFunc("updateSubTask", h.UpdateSubtask).Methods(http.MethodPost)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
