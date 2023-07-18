@@ -42,6 +42,13 @@ func (h handler) AddSubtask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	boardOwner := db.GetBoardOwnerById(h.DB, subtask.BoardId)
+	if boardOwner != userInfo.Email {
+		fmt.Println("user does not own the board that this subtask belongs to ")
+		json.NewEncoder(w).Encode("User does not own the board that this task belongs to")
+		return
+	}
+
 	// 3. commit to db
 	db.AddSubtask(h.DB, subtask)
 

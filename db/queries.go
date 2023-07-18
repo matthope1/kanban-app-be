@@ -92,13 +92,13 @@ func AddSubtask(db *gorm.DB, subtask types.Subtask) {
 	fmt.Println("adding subtask to db:", subtask.TaskId, subtask.Desc, subtask.IsComplete)
 
 	if err := db.Exec(`INSERT INTO subtask (task_id, "desc", is_complete) VALUES (?, ?, ?)`,
-		subtask.TaskId).Error; err != nil {
+		subtask.TaskId, subtask.Desc, subtask.IsComplete).Error; err != nil {
 		fmt.Println("error adding subtask to db:", err)
 	}
 }
 
 func UpdateSubtask(db *gorm.DB, subtask types.Subtask) {
-	fmt.Println("updating subtask in db:", subtask.TaskId)
+	fmt.Println("updating subtask in db:", subtask.Desc, subtask.IsComplete)
 
 	if err := db.Exec(`UPDATE subtask set "desc" = ?, is_complete = ? WHERE id = ?`,
 		subtask.Desc, subtask.IsComplete, subtask.ID).Error; err != nil {

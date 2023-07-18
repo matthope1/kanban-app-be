@@ -34,8 +34,8 @@ func main() {
 	api.HandleFunc("/addTask", h.AddTask).Methods(http.MethodPost)
 	api.HandleFunc("/updateTask", h.UpdateTask).Methods(http.MethodPost)
 
-	api.HandleFunc("addSubTask", h.AddSubtask).Methods(http.MethodPost)
-	api.HandleFunc("updateSubTask", h.UpdateSubtask).Methods(http.MethodPost)
+	api.HandleFunc("/addSubtask", h.AddSubtask).Methods(http.MethodPost)
+	api.HandleFunc("/updateSubtask", h.UpdateSubtask).Methods(http.MethodPost)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
