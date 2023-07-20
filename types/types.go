@@ -19,42 +19,42 @@ type UserInfo struct {
 type Board struct {
 	gorm.Model
 	ID        int
-	UserEmail string `json:"user_email"`
-	Title     string
-	Status    string `json:"status"`
-	CreatedAt time.Time
-	Columns   []Column
+	UserEmail string    `json:"user_email"`
+	Title     string    `json:"title"`
+	Status    string    `json:"status"`
+	CreatedAt time.Time `json:"created_at"`
+	Columns   []Column  `json:"columns"`
 }
 
 type Column struct {
 	gorm.Model
 	ID        int
-	Title     string `json:"title"`
-	BoardId   int    `json:"board_id"`
-	CreatedAt time.Time
-	Tasks     []Task
+	Title     string    `json:"title"`
+	BoardId   int       `json:"board_id"`
+	CreatedAt time.Time `json:"created_at"`
+	Tasks     []Task    `json:"tasks"`
 }
 
 type Task struct {
 	gorm.Model
 	ID        int
-	Status    string
-	Title     string `json:"title"`
-	Desc      string
-	ColumnId  int `json:"column_id"`
-	BoardId   int `json:"board_id"`
-	CreatedAt time.Time
-	Subtasks  []Subtask
+	Status    string    `json:"status"`
+	Title     string    `json:"title"`
+	Desc      string    `json:"desc"`
+	ColumnId  int       `json:"column_id"`
+	BoardId   int       `json:"board_id"`
+	CreatedAt time.Time `json:"created_at"`
+	Subtasks  []Subtask `json:"subtasks"`
 }
 
 type Subtask struct {
 	gorm.Model
 	ID         int
-	TaskId     int `json:"task_id"`
-	BoardId    int `json:"board_id"`
-	Desc       string
-	IsComplete bool `json:"is_complete"`
-	CreatedAt  time.Time
+	TaskId     int       `json:"task_id"`
+	BoardId    int       `json:"board_id"`
+	Desc       string    `json:"desc"`
+	IsComplete bool      `json:"is_complete"`
+	CreatedAt  time.Time `json:"created_at"`
 }
 
 type Product struct {
