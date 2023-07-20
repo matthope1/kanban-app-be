@@ -42,10 +42,24 @@ func (h handler) AddBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println("does it come with columns???? ---- len(columns): ", len(board.Columns))
+
 	// 3. commit to db
-	db.AddBoard(h.DB, board, userInfo.Email)
+	ID, addBoardErr := db.AddBoard(h.DB, board, userInfo.Email)
+	// TODO: update the add board db call so that it returns the id of the board just created
+	fmt.Println("just added a board with id:", ID)
+	if addBoardErr != nil {
+		fmt.Println("error adding board to db:", addBoardErr)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode("error adding board")
+	}
+
+	// TODO: if there's columns we also need to add them to the db
+	// TODO: get columns from request
+	// call db.AddColumn for each column :D
 
 	// 4. send success response
 	// 5. err handling
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Successfully added board")
 }

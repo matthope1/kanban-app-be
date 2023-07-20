@@ -40,16 +40,24 @@ func UpdateBoard(db *gorm.DB, board types.Board) {
 }
 
 // TODO: add functions
-func AddBoard(db *gorm.DB, board types.Board, userEmail string) {
+func AddBoard(db *gorm.DB, board types.Board, userEmail string) (int, error) {
 	// INSERT INTO table_name (column1, column2, column3, ...)
 	// VALUES (value1, value2, value3, ...);
 	// sql to insert board into board table
 	fmt.Println("adding board to db:", board.Title, board.Status, userEmail)
+	// var ID
+	// tx := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?) RETURNING ID").Scan(&ID)
+
+	// var ID int64
+	// tx.Raw("INSERT INTO yourTable (yourColumn) VALUES ('testInsertValue') RETURNING
+	// id").Scan(&ID)
 
 	if err := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?)",
 		board.Title, board.Status, board.UserEmail).Error; err != nil {
 		fmt.Println("error adding board to db:", err)
+		return 0, err
 	}
+	return 0, nil
 }
 
 func AddColumn(db *gorm.DB, column types.Column) {
