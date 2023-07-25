@@ -52,6 +52,7 @@ func AddBoard(db *gorm.DB, board types.Board, userEmail string) (int, error) {
 	// tx.Raw("INSERT INTO yourTable (yourColumn) VALUES ('testInsertValue') RETURNING
 	// id").Scan(&ID)
 
+	// TODO: fix insert so that it returns the id of the board just created
 	if err := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?)",
 		board.Title, board.Status, board.UserEmail).Error; err != nil {
 		fmt.Println("error adding board to db:", err)
