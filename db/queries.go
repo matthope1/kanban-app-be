@@ -45,19 +45,23 @@ func AddBoard(db *gorm.DB, board types.Board, userEmail string) (int, error) {
 	// VALUES (value1, value2, value3, ...);
 	// sql to insert board into board table
 	fmt.Println("adding board to db:", board.Title, board.Status, userEmail)
-	// var ID
-	// tx := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?) RETURNING ID").Scan(&ID)
-
-	// var ID int64
-	// tx.Raw("INSERT INTO yourTable (yourColumn) VALUES ('testInsertValue') RETURNING
-	// id").Scan(&ID)
-
-	// TODO: fix insert so that it returns the id of the board just created
-	if err := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?)",
-		board.Title, board.Status, board.UserEmail).Error; err != nil {
+	var ID int64
+	// TODO: we need to be careful about the default int being 0
+	if err := db.Raw("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?) RETURNING id",
+		board.Title, board.Status, board.UserEmail).Scan(&ID).Error; err != nil {
 		fmt.Println("error adding board to db:", err)
-		return 0, err
 	}
+	fmt.Println("returned id....", ID)
+	// TODO: return the id of the board just created and use it to add the columns
+
+	// fmt.Println("tx", tx)
+
+	// TODO: fix insert so that it returs the id of the board just created
+	// if err := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?)",
+	// 	board.Title, board.Status, board.UserEmail).Error; err != nil {
+	// 	fmt.Println("error adding board to db:", err)
+	// 	return 0, err
+	// }
 	return 0, nil
 }
 

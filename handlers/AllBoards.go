@@ -56,8 +56,8 @@ func (h handler) AllBoards(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("boards json")
-	fmt.Println(string(boardsJson))
+	// fmt.Println("boards json")
+	// fmt.Println(string(boardsJson))
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(boardsJson)
