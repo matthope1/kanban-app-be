@@ -49,7 +49,7 @@ func (h handler) AddColumn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db.AddColumn(h.DB, column)
+	db.AddColumn(h.DB, column, column.BoardId)
 
 	// TODO:
 	// 1. get board id from req

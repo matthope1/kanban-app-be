@@ -59,10 +59,11 @@ func (h handler) AddBoard(w http.ResponseWriter, r *http.Request) {
 
 	// Adding all columns
 
-	// for _, column := range board.Columns {
-	// 	// TODO: add error handling
-	// 	db.AddColumn(h.DB, column)
-	// }
+	for _, column := range board.Columns {
+		fmt.Println("adding column:", column.Title, "to board with id:", ID)
+		// TODO: add error handling
+		db.AddColumn(h.DB, column, ID)
+	}
 
 	// 4. send success response
 	// 5. err handling

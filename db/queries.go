@@ -45,31 +45,23 @@ func AddBoard(db *gorm.DB, board types.Board, userEmail string) (int, error) {
 	// VALUES (value1, value2, value3, ...);
 	// sql to insert board into board table
 	fmt.Println("adding board to db:", board.Title, board.Status, userEmail)
-	var ID int64
+	var ID int
 	// TODO: we need to be careful about the default int being 0
 	if err := db.Raw("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?) RETURNING id",
 		board.Title, board.Status, board.UserEmail).Scan(&ID).Error; err != nil {
 		fmt.Println("error adding board to db:", err)
+		return -1, err
 	}
 	fmt.Println("returned id....", ID)
 	// TODO: return the id of the board just created and use it to add the columns
-
-	// fmt.Println("tx", tx)
-
-	// TODO: fix insert so that it returs the id of the board just created
-	// if err := db.Exec("INSERT INTO board (title, status, user_email) VALUES (?, ?, ?)",
-	// 	board.Title, board.Status, board.UserEmail).Error; err != nil {
-	// 	fmt.Println("error adding board to db:", err)
-	// 	return 0, err
-	// }
-	return 0, nil
+	return ID, nil
 }
 
-func AddColumn(db *gorm.DB, column types.Column) {
-	fmt.Println("adding column to db:", column.Title, column.BoardId)
+func AddColumn(db *gorm.DB, column types.Column, boardId int) {
+	fmt.Println("adding column to db:", column.Title, boardId)
 
 	if err := db.Exec(`INSERT INTO "column" (title, board_id) VALUES (?, ?)`,
-		column.Title, column.BoardId).Error; err != nil {
+		column.Title, boardId).Error; err != nil {
 		fmt.Println("error adding column to db:", err)
 	}
 }
