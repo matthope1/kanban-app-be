@@ -27,18 +27,47 @@ type Restaurant struct {
 	Grades       []interface{}
 }
 
+type Subtask struct {
+	ID          primitive.ObjectID `bson:"_id"`
+	desc        string
+	is_complete bool
+	created_at  string
+}
+
+type Column struct {
+	ID         primitive.ObjectID `bson:"_id"`
+	title      string
+	desc       string
+	created_at string
+	subtasks   []Subtask
+}
+
+type Board struct {
+	ID         primitive.ObjectID `bson:"_id"`
+	title      string
+	user_email string
+	status     string
+	created_at string
+	columns    []Column
+}
+
 func main() {
 	fmt.Println("starting program")
 	// testing mongo
 	mongoDB := db.InitMongoDb()
 
-	// begin findOne
-	coll := mongoDB.Database("sample_restaurants").Collection("restaurants")
-	filter := bson.D{{"name", "Bagels N Buns"}}
+	coll := mongoDB.Database("kanban").Collection("boards")
 
-	var result Restaurant
+	// begin findOne
+	// coll := mongoDB.Database("sample_restaurants").Collection("restaurants")
+	filter := bson.D{{"user_email", "matt-hope@hotmail.com"}}
+
+	// var result Restaurant
+	var result Board
 	var err error
 	err = coll.FindOne(context.TODO(), filter).Decode(&result)
+
+	fmt.Println("result", result)
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {

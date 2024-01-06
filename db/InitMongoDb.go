@@ -14,7 +14,10 @@ func InitMongoDb() *mongo.Client {
 	// Use the SetServerAPIOptions() method to set the Stable API version to 1
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	mongoDbPass := os.Getenv("MONGO_DB_PASS")
+	fmt.Println("mongoDbPass", mongoDbPass)
+
 	URI := "mongodb+srv://root:" + mongoDbPass + "@cluster0.1vieuux.mongodb.net/?retryWrites=true&w=majority"
+	fmt.Println("URI: ", URI)
 	opts := options.Client().ApplyURI(URI).SetServerAPIOptions(serverAPI)
 	// Create a new client and connect to the server
 	client, err := mongo.Connect(context.TODO(), opts)
