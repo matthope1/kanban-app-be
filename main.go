@@ -2,19 +2,18 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"kanban-app-be/db"
 	"kanban-app-be/handlers"
 	"kanban-app-be/middleware"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Restaurant struct {
@@ -28,27 +27,36 @@ type Restaurant struct {
 }
 
 type Subtask struct {
-	ID          primitive.ObjectID `bson:"_id"`
-	desc        string
-	is_complete bool
-	created_at  string
+	ID         primitive.ObjectID `bson:"_id"`
+	Desc       string             `bson:"desc"`
+	IsComplete bool               `bson:"is_complete"`
+	CreatedAt  time.Time          `bson:"created_at"`
 }
 
 type Column struct {
-	ID         primitive.ObjectID `bson:"_id"`
-	title      string
-	desc       string
-	created_at string
-	subtasks   []Subtask
+	ID        primitive.ObjectID `bson:"_id"`
+	Title     string             `bson:"title"`
+	Desc      string             `bson:"desc"`
+	CreatedAt time.Time          `bson:"created_at"`
+	Tasks     []Task             `bson:"tasks"`
+}
+
+type Task struct {
+	ID        primitive.ObjectID `bson:"_id"`
+	Status    string             `bson:"status"`
+	Title     string             `bson:"title"`
+	Desc      string             `bson:"desc"`
+	CreatedAt time.Time          `bson:"created_at"`
+	Subtasks  []Subtask          `bson:"subtasks"`
 }
 
 type Board struct {
-	ID         primitive.ObjectID `bson:"_id"`
-	title      string
-	user_email string
-	status     string
-	created_at string
-	columns    []Column
+	ID        primitive.ObjectID `bson:"_id"`
+	Title     string             `bson:"title"`
+	UserEmail string             `bson:"user_email"`
+	Status    string             `bson:"status"`
+	CreatedAt time.Time          `bson:"created_at"`
+	Columns   []Column           `bson:"columns"`
 }
 
 func main() {
@@ -56,35 +64,38 @@ func main() {
 	// testing mongo
 	mongoDB := db.InitMongoDb()
 
-	coll := mongoDB.Database("kanban").Collection("boards")
+	// Specify the database and collection
+	database := mongoDB.Database("kanban")
+	collection := database.Collection("boards")
 
-	// begin findOne
-	// coll := mongoDB.Database("sample_restaurants").Collection("restaurants")
-	filter := bson.D{{"user_email", "matt-hope@hotmail.com"}}
-
-	// var result Restaurant
-	var result Board
-	var err error
-	err = coll.FindOne(context.TODO(), filter).Decode(&result)
-
-	fmt.Println("result", result)
-
+	// Find all documents in the collection
+	cursor, err := collection.Find(context.TODO(), bson.M{})
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			// This error means your query did not match any documents.
-			return
+		panic(err)
+	}
+	defer cursor.Close(context.TODO())
+
+	// Iterate through the cursor and print each document
+	for cursor.Next(context.TODO()) {
+		var result Board
+		err := cursor.Decode(&result)
+		if err != nil {
+			panic(err)
 		}
+		// fmt.Printf("Found document: %+v\n", result)
+		fmt.Println("title: ", result.Title)
+		fmt.Println("user_email: ", result.UserEmail)
+		fmt.Println("status: ", result.Status)
+		fmt.Println("created_at: ", result.CreatedAt)
+		fmt.Println("columns: ", result.Columns)
+		fmt.Println("=====================================")
+
+	}
+
+	// Check for errors from iterating over the cursor
+	if err := cursor.Err(); err != nil {
 		panic(err)
 	}
-	// end findOne
-
-	output, err := json.MarshalIndent(result, "", "    ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", output)
-
-	fmt.Println("ending program")
 
 	return
 
