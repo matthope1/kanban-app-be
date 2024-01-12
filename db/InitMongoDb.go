@@ -3,14 +3,20 @@ package db
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func InitMongoDb() *mongo.Client {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(".env file could not be loaded")
+	}
 	// Use the SetServerAPIOptions() method to set the Stable API version to 1
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	mongoDbPass := os.Getenv("MONGO_DB_PASS")

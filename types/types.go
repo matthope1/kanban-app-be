@@ -3,7 +3,7 @@ package types
 import (
 	"time"
 
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserInfo struct {
@@ -16,49 +16,35 @@ type UserInfo struct {
 	EmailVerified string
 }
 
-type Board struct {
-	gorm.Model
-	ID        int
-	UserEmail string    `json:"user_email"`
-	Title     string    `json:"title"`
-	Status    string    `json:"status"`
-	CreatedAt time.Time `json:"created_at"`
-	Columns   []Column  `json:"columns"`
+type Subtask struct {
+	ID         primitive.ObjectID `bson:"_id"`
+	Desc       string             `bson:"desc"`
+	IsComplete bool               `bson:"is_complete"`
+	CreatedAt  time.Time          `bson:"created_at"`
 }
 
 type Column struct {
-	gorm.Model
-	ID        int
-	Title     string    `json:"title"`
-	BoardId   int       `json:"board_id"`
-	CreatedAt time.Time `json:"created_at"`
-	Tasks     []Task    `json:"tasks"`
+	ID        primitive.ObjectID `bson:"_id"`
+	Title     string             `bson:"title"`
+	Desc      string             `bson:"desc"`
+	CreatedAt time.Time          `bson:"created_at"`
+	Tasks     []Task             `bson:"tasks"`
 }
 
 type Task struct {
-	gorm.Model
-	ID        int
-	Status    string    `json:"status"`
-	Title     string    `json:"title"`
-	Desc      string    `json:"desc"`
-	ColumnId  int       `json:"column_id"`
-	BoardId   int       `json:"board_id"`
-	CreatedAt time.Time `json:"created_at"`
-	Subtasks  []Subtask `json:"subtasks"`
+	ID        primitive.ObjectID `bson:"_id"`
+	Status    string             `bson:"status"`
+	Title     string             `bson:"title"`
+	Desc      string             `bson:"desc"`
+	CreatedAt time.Time          `bson:"created_at"`
+	Subtasks  []Subtask          `bson:"subtasks"`
 }
 
-type Subtask struct {
-	gorm.Model
-	ID         int
-	TaskId     int       `json:"task_id"`
-	BoardId    int       `json:"board_id"`
-	Desc       string    `json:"desc"`
-	IsComplete bool      `json:"is_complete"`
-	CreatedAt  time.Time `json:"created_at"`
-}
-
-type Product struct {
-	gorm.Model
-	Code  string
-	Price uint
+type Board struct {
+	ID        primitive.ObjectID `bson:"_id"`
+	Title     string             `bson:"title"`
+	UserEmail string             `bson:"user_email"`
+	Status    string             `bson:"status"`
+	CreatedAt time.Time          `bson:"created_at"`
+	Columns   []Column           `bson:"columns"`
 }

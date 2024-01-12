@@ -1,11 +1,13 @@
 package handlers
 
-import "gorm.io/gorm"
+import (
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 type handler struct {
-	DB *gorm.DB
+	DB *mongo.Client
 }
 
-func New(db *gorm.DB) handler {
+func New(db *mongo.Client) handler {
 	return handler{db}
 }

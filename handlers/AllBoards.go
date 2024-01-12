@@ -1,15 +1,17 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
 	"kanban-app-be/auth0"
-	"kanban-app-be/db"
+	"kanban-app-be/types"
 
 	"net/http"
 
 	middleware "github.com/auth0/go-jwt-middleware/v2"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // TODO: rename to all data
@@ -25,39 +27,25 @@ func (h handler) AllBoards(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
 	// TODO: add error handling, ensure that user email exists
-
-	// 2. get all boards from database for the current user
-	boards := db.GetBoards(h.DB, userInfo.Email)
-
-	// get all columns, tasks, and subtasks for each board
-	for i, board := range boards {
-		// get all columns for this board, and append to board struct
-		columns := db.GetColumns(h.DB, board.ID)
-		for j, column := range columns {
-			boards[i].Columns = append(boards[i].Columns, column)
-
-			// for each column, get all tasks and append to column struct
-			tasks := db.GetTasks(h.DB, column.ID)
-
-			for k, task := range tasks {
-				// append task to column struct
-				boards[i].Columns[j].Tasks = append(boards[i].Columns[j].Tasks, task)
-
-				// for each task, get all subtasks and append to task struct
-				subtasks := db.GetSubTasks(h.DB, task.ID)
-
-				// add subtasks to task struct
-				boards[i].Columns[j].Tasks[k].Subtasks = append(boards[i].Columns[j].Tasks[k].Subtasks, subtasks...)
-			}
-		}
+	coll := h.DB.Database("kanban").Collection("boards")
+	fmt.Println("all boards... \n user email: ", userInfo.Email)
+	filter := bson.D{{"user_email", userInfo.Email}}
+	// Retrieves the first matching document
+	var result types.Board
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+	// Prints a message if no documents are matched or if any
+	// other errors occur during the operation
+	fmt.Println("result: ", result)
+	if err != nil {
+		panic(err)
 	}
 
-	boardsJson, err := json.Marshal(boards)
+	boardsJson, err := json.Marshal(result)
 	if err != nil {
 		fmt.Println(err)
 	}
-	// fmt.Println("boards json")
-	// fmt.Println(string(boardsJson))
+	fmt.Println("boards json")
+	fmt.Println(string(boardsJson))
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(boardsJson)
