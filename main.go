@@ -45,7 +45,7 @@ func main() {
 
 	// only signed in users can call these functions
 	api.HandleFunc("/allBoards", h.AllBoards).Methods(http.MethodGet)
-	// api.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
+	api.HandleFunc("/addBoard", h.AddBoard).Methods(http.MethodPost)
 	// api.HandleFunc("/updateBoard", h.UpdateBoard).Methods(http.MethodPost)
 
 	// api.HandleFunc("/addColumn", h.AddColumn).Methods(http.MethodPost)
@@ -53,6 +53,7 @@ func main() {
 
 	// api.HandleFunc("/addTask", h.AddTask).Methods(http.MethodPost)
 	// api.HandleFunc("/updateTask", h.UpdateTask).Methods(http.MethodPost)
+	api.HandleFunc("/deleteTask", h.DeleteTask).Methods(http.MethodPost)
 
 	// api.HandleFunc("/addSubtask", h.AddSubtask).Methods(http.MethodPost)
 	// api.HandleFunc("/updateSubtask", h.UpdateSubtask).Methods(http.MethodPost)

@@ -26,26 +26,43 @@ func (h handler) AllBoards(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
-	// TODO: add error handling, ensure that user email exists
+	// begin
+	// begin find
 	coll := h.DB.Database("kanban").Collection("boards")
-	fmt.Println("all boards... \n user email: ", userInfo.Email)
+
+	// Creates a query filter to match documents in which the "cuisine"
+	// is "Italian"
 	filter := bson.D{{"user_email", userInfo.Email}}
-	// Retrieves the first matching document
-	var result types.Board
-	err := coll.FindOne(context.TODO(), filter).Decode(&result)
-	// Prints a message if no documents are matched or if any
-	// other errors occur during the operation
-	fmt.Println("result: ", result)
+
+	// Retrieves documents that match the query filer
+	cursor, err := coll.Find(context.TODO(), filter)
 	if err != nil {
 		panic(err)
 	}
+	// end find
 
-	boardsJson, err := json.Marshal(result)
+	var results []types.Board
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		panic(err)
+	}
+
+	// Prints the results of the find operation as structs
+	for _, result := range results {
+		cursor.Decode(&result)
+		// output, err := json.MarshalIndent(result, "", "    ")
+		_, err := json.MarshalIndent(result, "", "    ")
+		if err != nil {
+			panic(err)
+		}
+		// fmt.Printf("%s\n", output)
+	}
+
+	boardsJson, err := json.Marshal(results)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("boards json")
-	fmt.Println(string(boardsJson))
+	// fmt.Println("boards json")
+	// fmt.Println(string(boardsJson))
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(boardsJson)
